@@ -14,21 +14,21 @@ import (
 
 func Init() error {
 	mongoDBUri := os.Getenv("MONGODB_URI")
-	err := mgm.SetDefaultConfig(nil, "auth", options.Client().ApplyURI(mongoDBUri))
+	err := mgm.SetDefaultConfig(nil, "contacts", options.Client().ApplyURI(mongoDBUri))
 	if err != nil {
 		return err
 	}
 	fmt.Println("Successfully connected to mongo on URI", mongoDBUri)
 	fmt.Println("Setting Indexes Rules")
-	setUserIndexes()
+	setContactIndexes()
 	fmt.Println("Finished Setting Indexes Rules")
 
 	return err
 }
 
-func setUserIndexes() {
-	mod := mongo.IndexModel{Keys: bson.M{"email": 1}, Options: options.Index().SetUnique(true)}
-	_, err := mgm.CollectionByName("users").Indexes().CreateOne(context.Background(), mod)
+func setContactIndexes() {
+	mod := mongo.IndexModel{Keys: bson.M{"email": 1, "organization_id": 1}, Options: options.Index().SetUnique(true)}
+	_, err := mgm.CollectionByName("contacts").Indexes().CreateOne(context.Background(), mod)
 	if err != nil {
 		log.Fatalf("something went wrong: %+v", err)
 	}

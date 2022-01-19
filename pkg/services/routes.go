@@ -1,6 +1,6 @@
 package services
 
-import "auth-service/pkg/models"
+import "contact-service/pkg/models"
 
 func NewRoute(path string, method string, name string, params string) models.Route {
 	return models.Route{

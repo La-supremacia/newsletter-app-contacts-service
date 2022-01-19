@@ -1,9 +1,10 @@
 package main
 
 import (
-	mid "auth-service/pkg/middleware"
-	"auth-service/pkg/routes"
-	"auth-service/pkg/utils"
+	mid "contact-service/pkg/middleware"
+	"contact-service/pkg/routes"
+	"contact-service/pkg/utils"
+	"contact-service/platform/database"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +13,7 @@ import (
 func main() {
 	app := fiber.New()
 	utils.GoDotEnvVariable("PORT")
-	//database.Init()
+	database.Init()
 	mid.FiberMiddleware(app)
 	routes.PublicRoutes(app)
 	port := os.Getenv("PORT")
