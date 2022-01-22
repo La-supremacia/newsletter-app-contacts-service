@@ -3,7 +3,6 @@ package controllers
 import (
 	"contact-service/pkg/models"
 	"contact-service/pkg/services"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kamva/mgm/v3"
@@ -42,7 +41,7 @@ func GetContactById(c *fiber.Ctx) error {
 	err := coll.FindByID(id, baseModel)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
+		return c.Status(fiber.StatusNotFound).JSON(err)
 	}
 
 	return c.JSON(baseModel)
@@ -60,7 +59,6 @@ func GetContactsByQuery(c *fiber.Ctx) error {
 	result := []models.Contact{}
 
 	query := bson.M{"organization_id": bson.M{operator.Eq: organizationId}}
-
 	err := coll.SimpleFind(&result, query)
 
 	if err != nil {
@@ -81,11 +79,10 @@ func CreateContact(c *fiber.Ctx) error {
 
 	err := mgm.Coll(createdContact).Create(createdContact)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(err)
 	}
-	fmt.Println("Successfully created a new Contact", createdContact.Name, createdContact.LastName)
 
-	return c.Status(fiber.StatusOK).JSON(createdContact)
+	return c.Status(fiber.StatusCreated).JSON(createdContact)
 }
 
 func UpdateContact(c *fiber.Ctx) error {
@@ -104,7 +101,7 @@ func UpdateContact(c *fiber.Ctx) error {
 	err := coll.FindByID(id, baseModel)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
+		return c.Status(fiber.StatusNotFound).JSON(err)
 	}
 
 	baseModel.Name = body.Name
@@ -114,7 +111,7 @@ func UpdateContact(c *fiber.Ctx) error {
 	err = coll.Update(baseModel)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(baseModel)
@@ -129,15 +126,20 @@ func DeleteContact(c *fiber.Ctx) error {
 
 	baseModel := &models.Contact{}
 	coll := mgm.Coll(baseModel)
-	_ = coll.FindByID(id, baseModel)
-	err := coll.Delete(baseModel)
+	err := coll.FindByID(id, baseModel)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
+		return c.Status(fiber.StatusNotFound).JSON(err)
+	}
+
+	err = coll.Delete(baseModel)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 
 	return c.JSON(fiber.Map{
 		"sucess":  true,
-		"message": "The organization was successfully deleted",
+		"message": "The contact was successfully deleted",
 	})
 }
