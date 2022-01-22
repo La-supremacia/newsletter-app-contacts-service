@@ -27,7 +27,7 @@ func Init() error {
 }
 
 func setContactIndexes() {
-	mod := mongo.IndexModel{Keys: bson.D{{"email", 1}, {"organization_id", 1}}, Options: options.Index().SetUnique(true)}
+	mod := mongo.IndexModel{Keys: bson.D{bson.E{Key: "email", Value: 1}, bson.E{Key: "organization_id", Value: 1}}, Options: options.Index().SetUnique(true)}
 	name, err := mgm.CollectionByName("contacts").Indexes().CreateOne(context.Background(), mod)
 	if err != nil {
 		log.Fatalf("something went wrong: %+v", err)
