@@ -3,6 +3,7 @@ package controllers
 import (
 	"contact-service/pkg/models"
 	"contact-service/pkg/services"
+	"errors"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,15 +23,19 @@ func GetRoutes(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(ruts)
 }
 
-func GetConstactById(c *fiber.Ctx) error {
+func GetContactById(c *fiber.Ctx) error {
 	id := c.Params("id")
+
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(errors.New("required param id not found"))
+	}
 
 	baseModel := &models.Contact{}
 	coll := mgm.Coll(baseModel)
 	err := coll.FindByID(id, baseModel)
 
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(err)
+		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
 	return c.JSON(baseModel)
@@ -51,7 +56,7 @@ func GetContactsByQuery(c *fiber.Ctx) error {
 	err := coll.SimpleFind(&result, query)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
+		return c.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 
 	return c.JSON(result)
@@ -61,7 +66,7 @@ func CreateContact(c *fiber.Ctx) error {
 	body := new(models.CreateContact_Request)
 
 	if err := c.BodyParser(body); err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
 	createdContact := services.NewContact(body)
@@ -73,4 +78,36 @@ func CreateContact(c *fiber.Ctx) error {
 	fmt.Println("Successfully created a new Contact", createdContact.Name, createdContact.LastName)
 
 	return c.Status(fiber.StatusOK).JSON(createdContact)
+}
+
+func UpdateContact(c *fiber.Ctx) error {
+	id := c.Params("id")
+	body := new(models.CreateContact_Request)
+
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(errors.New("required param id not found"))
+	}
+	if err := c.BodyParser(body); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	baseModel := &models.Contact{}
+	coll := mgm.Coll(baseModel)
+	err := coll.FindByID(id, baseModel)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	baseModel.Name = body.Name
+	baseModel.LastName = body.LastName
+	baseModel.Email = body.Email
+	baseModel.Phone = body.Phone
+	err = coll.Update(baseModel)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(baseModel)
 }

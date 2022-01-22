@@ -10,6 +10,7 @@ func PublicRoutes(a *fiber.App) {
 	route := a.Group("/api/v1")
 	route.Get("/", controllers.GetRoutes).Name("Root")
 	route.Get("/contacts/search", controllers.GetContactsByQuery).Name("SearchConstacts")
-	route.Get("/contacts/:id", controllers.GetConstactById).Name("GetContact")
+	route.Get("/contacts/:id", controllers.GetContactById).Name("GetContact")
 	route.Post("/contacts", controllers.CreateContact).Name("CreateContact")
+	route.Put("/contacts/:id", controllers.UpdateContact).Name("UpdateContact")
 }
