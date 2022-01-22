@@ -14,11 +14,19 @@ import (
 
 func GetRoutes(c *fiber.Ctx) error {
 	rootRoute := c.App().GetRoute("Root")
+	getByIdRoute := c.App().GetRoute("GetContact")
+	searchRoute := c.App().GetRoute("SearchContacts")
 	createRoute := c.App().GetRoute("CreateContact")
+	updateRoute := c.App().GetRoute("UpdateContact")
+	deleteRoute := c.App().GetRoute("DeleteContact")
 
-	var ruts = [2]models.Route{
+	var ruts = [6]models.Route{
 		services.NewRoute(rootRoute.Path, rootRoute.Method, rootRoute.Name, ""),
-		services.NewRoute(createRoute.Path, createRoute.Method, createRoute.Name, "name:string,last_name:string,email:string,organization_id:string"),
+		services.NewRoute(getByIdRoute.Path, getByIdRoute.Method, getByIdRoute.Name, ""),
+		services.NewRoute(searchRoute.Path, searchRoute.Method, searchRoute.Name, "organization_id:string"),
+		services.NewRoute(createRoute.Path, createRoute.Method, createRoute.Name, "name:string,last_name:string,email:string,phone:string,organization_id:string"),
+		services.NewRoute(updateRoute.Path, updateRoute.Method, updateRoute.Name, "name:string,last_name:string,email:string,phone:string"),
+		services.NewRoute(deleteRoute.Path, deleteRoute.Method, deleteRoute.Name, ""),
 	}
 	return c.Status(fiber.StatusOK).JSON(ruts)
 }
