@@ -1,4 +1,4 @@
-module auth-service
+module contact-service
 
 // +heroku goVersion go1.17
 go 1.17
@@ -16,6 +16,7 @@ require (
 	github.com/andybalholm/brotli v1.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/gofiber/jwt/v3 v3.2.3 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
