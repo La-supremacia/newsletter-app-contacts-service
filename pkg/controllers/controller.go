@@ -111,3 +111,25 @@ func UpdateContact(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(baseModel)
 }
+
+func DeleteContact(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(errors.New("required param id not found"))
+	}
+
+	baseModel := &models.Contact{}
+	coll := mgm.Coll(baseModel)
+	_ = coll.FindByID(id, baseModel)
+	err := coll.Delete(baseModel)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err)
+	}
+
+	return c.JSON(fiber.Map{
+		"sucess":  true,
+		"message": "The organization was successfully deleted",
+	})
+}
