@@ -3,7 +3,6 @@ package controllers
 import (
 	"contact-service/pkg/models"
 	"contact-service/pkg/services"
-	"errors"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -35,7 +34,7 @@ func GetContactById(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	if id == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(errors.New("required param id not found"))
+		return fiber.NewError(fiber.StatusBadRequest, "required param id not found")
 	}
 
 	baseModel := &models.Contact{}
@@ -52,14 +51,15 @@ func GetContactById(c *fiber.Ctx) error {
 func GetContactsByQuery(c *fiber.Ctx) error {
 	organizationId := c.Query("organization_id")
 
+	if organizationId == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "required query param organization_id not found")
+	}
+
 	baseModel := &models.Contact{}
 	coll := mgm.Coll(baseModel)
 	result := []models.Contact{}
 
-	query := bson.M{}
-	if organizationId != "" {
-		query = bson.M{"organization_id": bson.M{operator.Eq: organizationId}}
-	}
+	query := bson.M{"organization_id": bson.M{operator.Eq: organizationId}}
 
 	err := coll.SimpleFind(&result, query)
 
@@ -93,7 +93,7 @@ func UpdateContact(c *fiber.Ctx) error {
 	body := new(models.CreateContact_Request)
 
 	if id == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(errors.New("required param id not found"))
+		return fiber.NewError(fiber.StatusBadRequest, "required param id not found")
 	}
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
@@ -124,7 +124,7 @@ func DeleteContact(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	if id == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(errors.New("required param id not found"))
+		return fiber.NewError(fiber.StatusBadRequest, "required param id not found")
 	}
 
 	baseModel := &models.Contact{}
