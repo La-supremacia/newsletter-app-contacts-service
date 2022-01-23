@@ -1,1 +1,1 @@
-web: bin/contacts-service 
+web: bin/contact-service 
