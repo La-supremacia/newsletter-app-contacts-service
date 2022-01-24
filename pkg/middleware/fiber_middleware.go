@@ -15,7 +15,7 @@ func FiberMiddleware(a *fiber.App) {
 		logger.New(),
 	)
 
-	secret := os.Getenv("JWT_SECRET_KEY") // utils.GoDotEnvVariable("JWT_SECRET_KEY") //
+	secret := os.Getenv("JWT_SECRET_KEY")
 	a.Use("/api/v1/contacts", jwtware.New(jwtware.Config{
 		SigningKey: []byte(secret),
 		ContextKey: "auth",
