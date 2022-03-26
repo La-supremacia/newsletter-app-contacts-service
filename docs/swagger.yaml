@@ -60,7 +60,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Route'
+            items:
+              $ref: '#/definitions/models.Route'
+            type: array
       summary: Retrieve all routes
       tags:
       - Routes Public
@@ -197,7 +199,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Contact'
+            items:
+              $ref: '#/definitions/models.Contact'
+            type: array
         "400":
           description: Bad Request
           schema:

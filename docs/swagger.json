@@ -29,7 +29,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Route"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Route"
+                            }
                         }
                     }
                 }
@@ -236,7 +239,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Contact"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Contact"
+                            }
                         }
                     },
                     "400": {

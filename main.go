@@ -13,9 +13,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// @title           Contacts microservice for newsletter-app
-// @version         1.0
-// @description     This service manage the contacts of the app.
+// @title        Contacts microservice for newsletter-app
+// @version      1.0
+// @description  This service manage the contacts of the app.
 
 // @contact.name   API Support
 // @contact.email  lasupremaciadelpuntoycoma@gmail.com
@@ -24,8 +24,8 @@ import (
 // @BasePath  /api/v1
 
 // @securitydefinitions.apikey
-// @in header
-// @name Authorization
+// @in    header
+// @name  Authorization
 func main() {
 	app := fiber.New()
 	app.Get("/swagger/*", swagger.HandlerDefault)
