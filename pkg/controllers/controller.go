@@ -106,6 +106,7 @@ func GetContactsByQuery(c *fiber.Ctx) error {
 // @Produce      json
 // @Success      201  {object}  models.Contact
 // @Failure      400  {object}  models.DefaultError
+// @Failure      422  {object}  models.DefaultError
 // @Failure      500  {object}  models.DefaultError
 // @Router       /contacts [post]
 func CreateContact(c *fiber.Ctx) error {

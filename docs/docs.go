@@ -71,6 +71,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.DefaultError"
                         }
                     },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/models.DefaultError"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
