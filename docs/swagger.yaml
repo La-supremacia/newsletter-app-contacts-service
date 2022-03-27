@@ -22,6 +22,28 @@ definitions:
     - organization_id
     - phone
     type: object
+  models.CreateContact_Request:
+    properties:
+      email:
+        maxLength: 255
+        type: string
+      last_name:
+        maxLength: 255
+        type: string
+      name:
+        maxLength: 255
+        type: string
+      organization_id:
+        type: string
+      phone:
+        maxLength: 255
+        type: string
+    required:
+    - email
+    - name
+    - organization_id
+    - phone
+    type: object
   models.DefaultError:
     properties:
       message:
@@ -40,7 +62,7 @@ definitions:
       path:
         type: string
     type: object
-host: https://newsletter-app-contact-service.herokuapp.com/
+host: newsletter-app-contact-service.herokuapp.com
 info:
   contact:
     email: lasupremaciadelpuntoycoma@gmail.com
@@ -71,6 +93,18 @@ paths:
       consumes:
       - application/json
       description: Creates a contact.
+      parameters:
+      - description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Contact info
+        in: body
+        name: contact
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateContact_Request'
       produces:
       - application/json
       responses:
@@ -93,12 +127,17 @@ paths:
       summary: Creates a contact.
       tags:
       - Contacts
-  /contacts/:id:
+  /contacts/{id}:
     delete:
       consumes:
       - application/json
       description: Delete a contact.
       parameters:
+      - description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Contact Id
         in: path
         name: id
@@ -131,6 +170,11 @@ paths:
       - application/json
       description: Retrieve a contact's data.
       parameters:
+      - description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Contact Id
         in: path
         name: id
@@ -159,11 +203,21 @@ paths:
       - application/json
       description: Update a contact.
       parameters:
+      - description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Contact Id
         in: path
         name: id
         required: true
         type: string
+      - description: Contact info
+        in: body
+        name: contact
+        schema:
+          $ref: '#/definitions/models.CreateContact_Request'
       produces:
       - application/json
       responses:
@@ -192,6 +246,11 @@ paths:
       - application/json
       description: Search contacts.
       parameters:
+      - description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Organization id
         in: query
         name: organization_id
@@ -217,6 +276,8 @@ paths:
       summary: Search contacts.
       tags:
       - Contacts
+schemes:
+- https
 securityDefinitions:
   "":
     in: header

@@ -20,7 +20,8 @@ import (
 // @contact.name   API Support
 // @contact.email  lasupremaciadelpuntoycoma@gmail.com
 
-// @host      https://newsletter-app-contact-service.herokuapp.com/
+// @schemes   https
+// @host      newsletter-app-contact-service.herokuapp.com
 // @BasePath  /api/v1
 
 // @securitydefinitions.apikey

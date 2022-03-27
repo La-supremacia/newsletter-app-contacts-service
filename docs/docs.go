@@ -58,6 +58,24 @@ const docTemplate = `{
                     "Contacts"
                 ],
                 "summary": "Creates a contact.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Contact info",
+                        "name": "contact",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateContact_Request"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -86,7 +104,61 @@ const docTemplate = `{
                 }
             }
         },
-        "/contacts/:id": {
+        "/contacts/search": {
+            "get": {
+                "description": "Search contacts.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Search contacts.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organization id",
+                        "name": "organization_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Contact"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.DefaultError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.DefaultError"
+                        }
+                    }
+                }
+            }
+        },
+        "/contacts/{id}": {
             "get": {
                 "description": "Retrieve a contact's data.",
                 "consumes": [
@@ -100,6 +172,13 @@ const docTemplate = `{
                 ],
                 "summary": "Retrieve a contact",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Contact Id",
@@ -144,10 +223,25 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Contact Id",
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Contact info",
+                        "name": "contact",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateContact_Request"
+                        }
                     }
                 ],
                 "responses": {
@@ -192,6 +286,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Contact Id",
                         "name": "id",
                         "in": "path",
@@ -225,57 +326,40 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/contacts/search": {
-            "get": {
-                "description": "Search contacts.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Contacts"
-                ],
-                "summary": "Search contacts.",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Organization id",
-                        "name": "organization_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Contact"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/models.DefaultError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/models.DefaultError"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
         "models.Contact": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "organization_id",
+                "phone"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "last_name": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "organization_id": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "models.CreateContact_Request": {
             "type": "object",
             "required": [
                 "email",
@@ -346,9 +430,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "https://newsletter-app-contact-service.herokuapp.com/",
+	Host:             "newsletter-app-contact-service.herokuapp.com",
 	BasePath:         "/api/v1",
-	Schemes:          []string{},
+	Schemes:          []string{"https"},
 	Title:            "Contacts microservice for newsletter-app",
 	Description:      "This service manage the contacts of the app.",
 	InfoInstanceName: "swagger",
