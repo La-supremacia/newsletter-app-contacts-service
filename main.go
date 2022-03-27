@@ -7,11 +7,29 @@ import (
 	"contact-service/platform/database"
 	"os"
 
+	_ "contact-service/docs"
+
+	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
+// @title        Contacts microservice for newsletter-app
+// @version      1.0
+// @description  This service manage the contacts of the app.
+
+// @contact.name   API Support
+// @contact.email  lasupremaciadelpuntoycoma@gmail.com
+
+// @schemes   https
+// @host      newsletter-app-contact-service.herokuapp.com
+// @BasePath  /api/v1
+
+// @securitydefinitions.apikey
+// @in    header
+// @name  Authorization
 func main() {
 	app := fiber.New()
+	app.Get("/swagger/*", swagger.HandlerDefault)
 	utils.GoDotEnvVariable("PORT")
 	database.Init()
 	mid.FiberMiddleware(app)

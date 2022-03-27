@@ -10,6 +10,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// GetRoutes func show all routes.
+// @Description  Retrieve all routes in this service.
+// @Summary      Retrieve all routes
+// @Tags         Routes Public
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  []models.Route
+// @Router       / [get]
 func GetRoutes(c *fiber.Ctx) error {
 	rootRoute := c.App().GetRoute("Root")
 	getByIdRoute := c.App().GetRoute("GetContact")
@@ -29,6 +37,18 @@ func GetRoutes(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(ruts)
 }
 
+// GetContactById func retrieves a contact by given id.
+// @Description  Retrieve a contact's data.
+// @Param        Authorization  header  string  true  "Insert your access token"
+// @Summary      Retrieve a contact
+// @Tags         Contacts
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string                        true   "Contact Id"
+// @Success      200  {object}  models.Contact
+// @Failure      400  {object}  models.DefaultError
+// @Failure      404  {object}  models.DefaultError
+// @Router       /contacts/{id} [get]
 func GetContactById(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -47,6 +67,18 @@ func GetContactById(c *fiber.Ctx) error {
 	return c.JSON(baseModel)
 }
 
+// GetContactsByQuery func retrieve contacts by given query parameters.
+// @Description  Search contacts.
+// @Param        Authorization  header  string  true  "Insert your access token"
+// @Summary      Search contacts.
+// @Tags         Contacts
+// @Accept       json
+// @Produce      json
+// @Param        organization_id  query     string  true  "Organization id"
+// @Success      200              {object}  []models.Contact
+// @Failure      400              {object}  models.DefaultError
+// @Failure      500              {object}  models.DefaultError
+// @Router       /contacts/search [get]
 func GetContactsByQuery(c *fiber.Ctx) error {
 	organizationId := c.Query("organization_id")
 
@@ -68,6 +100,19 @@ func GetContactsByQuery(c *fiber.Ctx) error {
 	return c.JSON(result)
 }
 
+// CreateContact func Creates a contact.
+// @Description  Creates a contact.
+// @Param        Authorization  header  string  true  "Insert your access token"
+// @Summary      Creates a contact.
+// @Tags         Contacts
+// @Accept       json
+// @Produce      json
+// @Param        contact  body      models.CreateContact_Request  true  "Contact info"
+// @Success      201      {object}  models.Contact
+// @Failure      400      {object}  models.DefaultError
+// @Failure      422      {object}  models.DefaultError
+// @Failure      500      {object}  models.DefaultError
+// @Router       /contacts [post]
 func CreateContact(c *fiber.Ctx) error {
 	body := new(models.CreateContact_Request)
 
@@ -85,12 +130,26 @@ func CreateContact(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(createdContact)
 }
 
+// UpdateContact func Update a contact.
+// @Description  Update a contact.
+// @Param        Authorization  header  string  true  "Insert your access token"
+// @Summary      Update a contact.
+// @Tags         Contacts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string  true  "Contact Id"
+// @Param        contact  body      models.CreateContact_Request  false  "Contact info"
+// @Success      201      {object}  models.Contact
+// @Failure      400                  {object}  models.DefaultError
+// @Failure      404      {object}  models.DefaultError
+// @Failure      422      {object}  models.DefaultError
+// @Router       /contacts/{id} [put]
 func UpdateContact(c *fiber.Ctx) error {
 	id := c.Params("id")
 	body := new(models.CreateContact_Request)
 
 	if id == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "required param id not found")
+		return c.Status(fiber.StatusBadRequest).JSON(services.NewError(fiber.StatusBadRequest, "Requires parameter id not found"))
 	}
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
@@ -117,6 +176,19 @@ func UpdateContact(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(baseModel)
 }
 
+// DeleteContact func Delete a contact.
+// @Description  Delete a contact.
+// @Param        Authorization  header  string  true  "Insert your access token"
+// @Summary      Delete a contact.
+// @Tags         Contacts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string  true  "Contact Id"
+// @Success      201  {object}  models.Contact
+// @Failure      400  {object}  models.DefaultError
+// @Failure      404  {object}  models.DefaultError
+// @Failure      500  {object}  models.DefaultError
+// @Router       /contacts/{id} [delete]
 func DeleteContact(c *fiber.Ctx) error {
 	id := c.Params("id")
 
