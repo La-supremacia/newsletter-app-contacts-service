@@ -44,10 +44,10 @@ func GetRoutes(c *fiber.Ctx) error {
 // @Tags         Contacts
 // @Accept       json
 // @Produce      json
-// @Param        id       path      string                        true  "Contact Id"
+// @Param        id       path      string                        true   "Contact Id"
 // @Success      200  {object}  models.Contact
-// @Failure      400      {object}  models.DefaultError
-// @Failure      404      {object}  models.DefaultError
+// @Failure      400  {object}  models.DefaultError
+// @Failure      404  {object}  models.DefaultError
 // @Router       /contacts/{id} [get]
 func GetContactById(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -140,8 +140,8 @@ func CreateContact(c *fiber.Ctx) error {
 // @Param        id   path      string  true  "Contact Id"
 // @Param        contact  body      models.CreateContact_Request  false  "Contact info"
 // @Success      201      {object}  models.Contact
-// @Failure      400  {object}  models.DefaultError
-// @Failure      404  {object}  models.DefaultError
+// @Failure      400                  {object}  models.DefaultError
+// @Failure      404      {object}  models.DefaultError
 // @Failure      422      {object}  models.DefaultError
 // @Router       /contacts/{id} [put]
 func UpdateContact(c *fiber.Ctx) error {
